@@ -1,18 +1,49 @@
+// Funciones para trabajar el tema de las posiciones dado que
+// se convirtió una matriz a un arreglo
+const indexToColumn = (i, n) => {
+    return i % n
+}
+
+const indexToRow = (i, n) => {
+    return parseInt(i / n)
+}
+
+const getIndex = (column, row, n) => {
+    return row * n + column
+}
+
+const getBlank = (array) => {
+    return array.indexOf(' ')
+}
+
+// Muestra el array como matriz
+const show = (array, n) => {
+    let lastRow = 0
+    array.forEach((element, index) => {
+        currentRow = indexToRow(index, n)
+        if (lastRow < currentRow) {
+            process.stdout.write('\n')
+            lastRow = currentRow
+        }
+        process.stdout.write(String(element))
+    })
+    process.stdout.write('\n')
+}
+
 let option = ''
 let array = [1, 2, 3, 4, 5, 6, 7, ' ', 8] //[1, 2, 3, 8, 7, 4, ' ', 7, 4]
 const N = 3
 
 process.stdin.resume()
 
-console.log("Mostrando array inicial")
-console.log(array)
+console.log("Mostrando puzzle inicial")
+show(array, N)
 
 console.log("Ingrese un movimiento: ")
 
 process.stdin.on("data", function (x) {
 
     option = String(x).trim().toUpperCase()
-    console.log("El mov ingresado fue: " + option)
 
     if (option === "-1") {
         process.exit()
@@ -21,10 +52,12 @@ process.stdin.on("data", function (x) {
     array = curriedApplyMove(getBlank(array), 3)(array, option)
 
     if (valid(array)['valid']) {
+        show(array, N)
+        console.log("Has ganado!")
         process.exit()
     }
-    // TODO: Aca poner una función que muestre el puzzle de manera más bonita
-    console.log(array)
+
+    show(array, N)
 
     console.log("Ingrese un movimiento: ")
 })
@@ -66,20 +99,3 @@ const valid = (array) => {
     }, { value: -1, valid: true })
 }
 
-// Funciones para trabajar el tema de las posiciones dado que
-// se convirtió una matriz a un arreglo
-const indexToColumn = (i, n) => {
-    return i % n
-}
-
-const indexToRow = (i, n) => {
-    return parseInt(i / n)
-}
-
-const getIndex = (column, row, n) => {
-    return row * n + column
-}
-
-const getBlank = (array) => {
-    return array.indexOf(' ')
-}
