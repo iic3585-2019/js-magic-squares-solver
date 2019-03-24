@@ -1,48 +1,42 @@
-let array = [1, 2, 3, 8, 6, 4, ' ', 7, 5]
+let option = ''
+let array = [1, 2, 3, 8, 7, 4, ' ', 7, 4]
+let blank = 6
+const N = 3
 
-let finished_array = [1, 2, 3, 4, 5, 6, 7, 8, 'BLANK']
+process.stdin.resume()
 
-let blocked_array = []
+console.log("Ingrese un movimiento: ")
 
-const solveIt = (array, n) => {
+process.stdin.on("data", function (x) {
 
-    // Caso base, la cosa funciono o es inválido.
-    // Hay que declarar que algo fracasa cuando llega al máximo de movimientos ya que si no hay un máximo
-    // Una rama puede crecer infinitamente
-    if (valid(array)) {
-        return array
+    option = String(x).trim().toUpperCase()
+    console.log("El mov ingresado fue: " + option)
+
+    if (option === "-1") {
+        process.exit()
     }
 
-    // Voy y intento hacer la recursión con los vecinos. OJO hay que hacer un algo para evitar un movimiento del estilo UP, DOWN
-    // probablemente hay que llamar un algo (funcion o variable o ambas) auxiliar que diga que movimientos puedo hacer. Ejemplo en la cosa inicial solo debise poder hacer
-    // UP y RIGHT. Además después cuando haga la prumera recursión (Ejemplo UP), dentro de las recursiones que esa instancia crea
-    // NO puede salir down xq sería volver a tras >:(
-    else {
+    array = curriedApplyMove(blank, 3)(array, option)
 
-        let resp = curriedApplyMove(getBlank(array), n)(array, "UP")
+    console.log(array)
 
-        if (valid(resp)) {
+    console.log("Ingrese un movimiento: ")
+})
 
-        }
-
-    }
-
-
-}
-
-// TODO: Si el movimiento es inválido retornar lo mismo o quizá retornar un objeto que diga algo como {valid: true, newArray: []}
-const swap = (array, x, y, n) => ([array[x], array[y]] = [array[y], array[x]], array)
+// Cambia 2 elementos del arreglo
+// En caso que el cambio sea inválido, retorna el mismo elemento
+const swap = (array, x, y, n) => ((x >= 0 && y >= 0) && (x <= n * n - 1 && y <= n * n - 1)) ? ([array[x], array[y]] = [array[y], array[x]], array) : array
 
 const curriedApplyMove = (index_of_blank, n) => {
     return (array, move) => {
         switch (move) {
-            case "UP":
-                return swap(array, index_of_blank, getIndex(indexToColumn(index_of_blank, n), indexToRow(index_of_blank, n) - 1, n), n)
             case "DOWN":
+                return swap(array, index_of_blank, getIndex(indexToColumn(index_of_blank, n), indexToRow(index_of_blank, n) - 1, n), n)
+            case "UP":
                 return swap(array, index_of_blank, getIndex(indexToColumn(index_of_blank, n), indexToRow(index_of_blank, n) + 1, n), n)
-            case "LEFT":
-                return swap(array, index_of_blank, getIndex(indexToColumn(index_of_blank, n) - 1, indexToRow(index_of_blank, n), n), n)
             case "RIGHT":
+                return swap(array, index_of_blank, getIndex(indexToColumn(index_of_blank, n) - 1, indexToRow(index_of_blank, n), n), n)
+            case "LEFT":
                 return swap(array, index_of_blank, getIndex(indexToColumn(index_of_blank, n) + 1, indexToRow(index_of_blank, n), n), n)
 
         }
@@ -75,35 +69,3 @@ const getIndex = (column, row, n) => {
 const getBlank = (array) => {
     return array.indexOf(' ')
 }
-
-let blank = array.indexOf(' ')
-const N = 3
-
-console.log("Mostrando el blank")
-console.log(blank)
-
-console.log("BEFORE")
-console.log(array)
-
-console.log("AFTER")
-console.log(curriedApplyMove(blank, N)(array, "UP"))
-
-console.log("Mostrando lo del value")
-console.log("Caso que debe dar malo")
-console.log(valid(array, array.length))
-
-console.log("Caso en que debe dar bueno")
-console.log(valid(finished_array, finished_array.length))
-
-console.log("probando probando")
-
-array.forEach(num => {
-    if(num != array.indexOf(num)+1){
-        console.log(num)
-    }
-})
-
-
-/*matrix[0].reduce((total, curr) => {
-    return (total < curr) ? curr : ''
-}, -1)*/
