@@ -1,0 +1,1 @@
+# js-magic-squares-solver
