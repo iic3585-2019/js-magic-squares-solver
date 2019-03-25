@@ -51,7 +51,7 @@ process.stdin.on("data", function (x) {
         process.exit()
     }
 
-    array = curriedApplyMove(getBlank(array), 3)(array, option)
+    array = curriedApplyMove(getBlank(array), getN(array))(array, option)
 
     if (valid(array)['valid']) {
         show(array, getN(array))
