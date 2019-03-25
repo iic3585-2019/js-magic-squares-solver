@@ -1,3 +1,6 @@
+//Arreglo inicial
+let array = [1, 2, 3, 4, 5, 6, 7, ' ', 8]
+
 // Funciones para trabajar el tema de las posiciones dado que
 // se convirtió una matriz a un arreglo
 const indexToColumn = (i, n) => {
@@ -16,28 +19,27 @@ const getBlank = (array) => {
     return array.indexOf(' ')
 }
 
+const getN = (array) => {
+    return array.length**(1/2)
+}
+
 // Muestra el array como matriz
 const show = (array, n) => {
     let lastRow = 0
     array.forEach((element, index) => {
-        currentRow = indexToRow(index, n)
-        if (lastRow < currentRow) {
+        if (lastRow < indexToRow(index, n)) {
             process.stdout.write('\n')
-            lastRow = currentRow
+            lastRow = indexToRow(index, n)
         }
-        process.stdout.write(String(element))
+        process.stdout.write(String(element)+" ")
     })
     process.stdout.write('\n')
 }
 
-let option = ''
-let array = [1, 2, 3, 4, 5, 6, 7, ' ', 8] //[1, 2, 3, 8, 7, 4, ' ', 7, 4]
-const N = 3
-
 process.stdin.resume()
 
 console.log("Mostrando puzzle inicial")
-show(array, N)
+show(array, getN(array))
 
 console.log("Ingrese un movimiento: ")
 
@@ -52,12 +54,12 @@ process.stdin.on("data", function (x) {
     array = curriedApplyMove(getBlank(array), 3)(array, option)
 
     if (valid(array)['valid']) {
-        show(array, N)
+        show(array, getN(array))
         console.log("Has ganado!")
         process.exit()
     }
 
-    show(array, N)
+    show(array, getN(array))
 
     console.log("Ingrese un movimiento: ")
 })
